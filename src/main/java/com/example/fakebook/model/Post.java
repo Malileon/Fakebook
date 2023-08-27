@@ -8,7 +8,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String user;
+    private String userId;
     private String content;
 
     public Post() {
@@ -23,11 +23,11 @@ public class Post {
     }
 
     public String getUser() {
-        return user;
+        return userId;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser(String userId) {
+        this.userId = userId;
     }
 
     public String getContent() {
