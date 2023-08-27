@@ -53,17 +53,44 @@ export default class LoginForm extends React.Component {
         autoComplete="off"
       >
         <Button
-          variant={(this.state.active = "login" ? "contained" : "text")}
-          onClick={() => this.setState({ active: "login" })}
+          onClick={() => {
+            this.setState({ active: "login" });
+          }}
+          variant={this.state.active === "login" ? "contained" : "outlined"}
         >
           Login
         </Button>
         <Button
-          variant={(this.state.active = "register" ? "outlined" : "contained")}
-          onClick={() => this.setState({ active: "register" })}
+          onClick={() => {
+            this.setState({ active: "register" });
+          }}
+          variant={this.state.active === "register" ? "contained" : "outlined"}
         >
           Register
         </Button>
+
+        <Box
+          component="form"
+          sx={{
+            "& > :not(style)": { m: 1, width: "25ch" },
+            display: this.state.active === "register" ? "none" : "",
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          Login forma tu
+        </Box>
+        <Box
+          component="form"
+          sx={{
+            "& > :not(style)": { m: 1, width: "25ch" },
+            display: this.state.active === "login" ? "none" : "",
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          Register forma tu
+        </Box>
       </Box>
     );
   }
