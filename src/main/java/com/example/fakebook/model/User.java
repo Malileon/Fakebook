@@ -1,40 +1,31 @@
 package com.example.fakebook.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name="users")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private String address;
 
-    public User() {
-    }
+    @Column(nullable = false)
+    private String firstName;
 
-    public int getId() {
-        return id;
-    }
+    @Column(nullable = false)
+    private String lastName;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    @Column(nullable = false)
+    private String login;
 
-    public String getName() {
-        return name;
-    }
+    @Column(nullable = false)
+    private String password;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 }

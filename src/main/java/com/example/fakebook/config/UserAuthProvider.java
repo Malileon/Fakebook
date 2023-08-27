@@ -8,13 +8,12 @@ import com.example.fakebook.dto.UserDto;
 import com.example.fakebook.service.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
@@ -22,7 +21,7 @@ import java.util.Date;
 @Component
 public class UserAuthProvider {
 
-    @Value("${security.jwt.token.secret-key:secret-value}")
+    @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
     private final UserService userService;
@@ -36,20 +35,25 @@ public class UserAuthProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 3_600_000);
 
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
-                .withIssuer(login)
+                .withSubject(login)
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
-                .sign(Algorithm.ECDSA256(secretKey));
+                .sign(algorithm);
     }
 
-    public Authentication validateToken(String token){
-        JWTVerifier verifier = JWT.require(Algorithm.ECDSA256(secretKey)).build();
+    public Authentication validateToken(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+
+        JWTVerifier verifier = JWT.require(algorithm)
+                .build();
 
         DecodedJWT decoded = verifier.verify(token);
 
-        UserDto user = userService.findByLogin(decoded.getIssuer());
+        UserDto user = userService.findByLogin(decoded.getSubject());
 
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
     }
+
 }

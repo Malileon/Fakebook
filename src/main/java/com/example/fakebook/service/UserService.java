@@ -1,10 +1,57 @@
 package com.example.fakebook.service;
-
+import com.example.fakebook.dto.CredentialsDto;
+import com.example.fakebook.dto.SignUpDto;
+import com.example.fakebook.dto.UserDto;
+import com.example.fakebook.exceptions.AppException;
+import com.example.fakebook.mapper.UserMapper;
 import com.example.fakebook.model.User;
+import com.example.fakebook.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.nio.CharBuffer;
+import java.util.Optional;
 
-public interface UserService {
-    public User saveUser(User user);
-    public List<User> getAllUsers();
+@RequiredArgsConstructor
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserDto findByLogin(String login) {
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        return userMapper.toUserDto(user);
+    }
+
+    public UserDto login(CredentialsDto credentialsDto) {
+        User user = userRepository.findByLogin(credentialsDto.getLogin())
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+
+        if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.getPassword()), user.getPassword())) {
+            return userMapper.toUserDto(user);
+        }
+
+        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+    }
+
+    public UserDto register(SignUpDto userDto) {
+        Optional<User> optionalUser = userRepository.findByLogin(userDto.getLogin());
+
+        if (optionalUser.isPresent()) {
+            throw new AppException("Login already exists", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userMapper.signUpToUser(userDto);
+
+        user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.getPassword())));
+
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toUserDto(user);
+    }
 }

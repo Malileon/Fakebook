@@ -1,30 +1,40 @@
 package com.example.fakebook.controller;
 
-import com.example.fakebook.model.User;
+import com.example.fakebook.config.UserAuthProvider;
+import com.example.fakebook.dto.CredentialsDto;
+import com.example.fakebook.dto.SignUpDto;
+import com.example.fakebook.dto.UserDto;
 import com.example.fakebook.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequiredArgsConstructor
+//@RequestMapping("/user")
 //@CrossOrigin
 public class UserController {
-    @Autowired
-    private UserService userService;
 
-    @PostMapping("/add")
-    public String add(@RequestBody User user) {
-        userService.saveUser(user);
-        return "New user is added";
+    private final UserService userService;
+    private final UserAuthProvider userAuthProvider;
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody CredentialsDto credentialsDto){
+        UserDto user = userService.login(credentialsDto);
+
+        user.setToken(userAuthProvider.createToken(user.getLogin()));
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/getAll")
-    public List<User> getAllUsers(){
-        return userService.getAllUsers();
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> register(@RequestBody SignUpDto signUpDto) {
+        UserDto user = userService.register(signUpDto);
+        user.setToken(userAuthProvider.createToken(user.getLogin()));
+        return ResponseEntity.created(URI.create("/users" + user.getId()))
+                .body(user);
     }
 
     @GetMapping("/testni")
