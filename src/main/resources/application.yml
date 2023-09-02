@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/fakebook
-    username: backend
-    password: backend
+    username: postgres
+    password: postgres
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false

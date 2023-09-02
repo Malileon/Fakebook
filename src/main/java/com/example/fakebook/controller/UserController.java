@@ -1,6 +1,6 @@
 package com.example.fakebook.controller;
 
-import com.example.fakebook.config.UserAuthProvider;
+import com.example.fakebook.config.UserAuthenticationProvider;
 import com.example.fakebook.dto.CredentialsDto;
 import com.example.fakebook.dto.SignUpDto;
 import com.example.fakebook.dto.UserDto;
@@ -13,28 +13,25 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-@RestController
 @RequiredArgsConstructor
-//@RequestMapping("/user")
-//@CrossOrigin
+@RestController
 public class UserController {
 
     private final UserService userService;
-    private final UserAuthProvider userAuthProvider;
-    @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody CredentialsDto credentialsDto){
-        UserDto user = userService.login(credentialsDto);
+    private final UserAuthenticationProvider userAuthenticationProvider;
 
-        user.setToken(userAuthProvider.createToken(user.getLogin()));
-        return ResponseEntity.ok(user);
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody CredentialsDto credentialsDto) {
+        UserDto userDto = userService.login(credentialsDto);
+        userDto.setToken(userAuthenticationProvider.createToken(userDto));
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody SignUpDto signUpDto) {
-        UserDto user = userService.register(signUpDto);
-        user.setToken(userAuthProvider.createToken(user.getLogin()));
-        return ResponseEntity.created(URI.create("/users" + user.getId()))
-                .body(user);
+    public ResponseEntity<UserDto> register(@RequestBody SignUpDto user) {
+        UserDto createdUser = userService.register(user);
+        createdUser.setToken(userAuthenticationProvider.createToken(createdUser));
+        return ResponseEntity.created(URI.create("/users/" + createdUser.getId())).body(createdUser);
     }
 
     @GetMapping("/testni")

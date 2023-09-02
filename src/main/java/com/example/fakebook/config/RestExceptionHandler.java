@@ -14,6 +14,6 @@ public class RestExceptionHandler {
     @ResponseBody
     public ResponseEntity<ErrorDto> handleException(AppException ex) {
         return ResponseEntity.status(ex.getCode())
-                .body(ErrorDto.builder().message(ex.getMessage()).build());
+                .body(new ErrorDto(ex.getMessage()));
     }
 }

@@ -1,12 +1,3 @@
 package com.example.fakebook.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
-@AllArgsConstructor
-@Builder
-@Data
-public class ErrorDto {
-    private String message;
-}
+public record ErrorDto (String message) { }

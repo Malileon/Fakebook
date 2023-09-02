@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import * as React from "react";
 
 export default class LoginForm extends React.Component {
@@ -78,7 +79,18 @@ export default class LoginForm extends React.Component {
           noValidate
           autoComplete="off"
         >
-          Login forma tu
+          <TextField
+            required
+            id="outlined-required"
+            label="Required"
+            defaultValue="Hello World"
+          />
+          <TextField
+            id="outlined-password-input"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+          />
         </Box>
         <Box
           component="form"
