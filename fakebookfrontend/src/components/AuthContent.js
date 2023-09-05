@@ -12,7 +12,7 @@ export default class AuthContent extends React.Component {
   }
 
   componentDidMount() {
-    request("GET", "/user/testni", {}).then((response) => {
+    request("GET", "/testni", {}).then((response) => {
       this.setState({ data: response.data });
     });
   }
