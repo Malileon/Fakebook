@@ -11,8 +11,8 @@ function App() {
     <div className="App">
       <Appbar />
       {/* <User/> */}
-      <LoginForm />
-      {/* <AppContent /> */}
+      {/* <LoginForm /> */}
+      <AppContent />
       {/* <TestForm /> */}
       {/* <AuthContent/> */}
     </div>

@@ -13,7 +13,6 @@ export default function User() {
   const handleClick = (e) => {
     e.preventDefault();
     const user = { name, address };
-    console.log(user);
     fetch("http://localhost:8080/user/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -65,7 +64,7 @@ export default function User() {
           {users.map((user) => (
             <Paper
               elevation={6}
-              style={{ margin: "10px", padding: "15px", textAlign: "elft" }}
+              style={{ margin: "10px", padding: "15px", textAlign: "left" }}
               key={user.id}
             >
               Id:{user.id}
