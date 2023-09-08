@@ -75,7 +75,6 @@ export default class LoginForm extends React.Component {
 
         <Box
           component="form"
-          // flexDirection="column"
           sx={{
             "& > :not(style)": { m: 1, width: "25ch" },
             display: this.state.active === "register" ? "none" : "flex",
