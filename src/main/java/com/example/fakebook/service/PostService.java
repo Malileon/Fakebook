@@ -4,6 +4,7 @@ import com.example.fakebook.model.Post;
 import com.example.fakebook.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,6 +20,8 @@ public class PostService {
     }
 
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        List<Post> allPosts = postRepository.findAll();
+        Collections.reverse(allPosts);
+        return allPosts;
     }
 }

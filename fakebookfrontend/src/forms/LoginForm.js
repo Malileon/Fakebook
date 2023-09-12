@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import * as React from "react";
 import "../index.css";
+import Appbar from "../components/Appbar";
 import AppContent from "../components/AppContent";
 
 export default class LoginForm extends React.Component {
@@ -43,6 +44,7 @@ export default class LoginForm extends React.Component {
   render() {
     return (
       <div id="authContainer">
+        <Appbar showLogout="false" />
         <Box
           component="form"
           sx={{
