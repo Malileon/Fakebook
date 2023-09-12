@@ -9,6 +9,8 @@ export default class AuthContent extends React.Component {
     super(props);
     this.state = {
       data: [],
+      comments: [],
+      users: [],
     };
   }
 
@@ -16,9 +18,16 @@ export default class AuthContent extends React.Component {
     request("GET", "/getAllPosts", {}).then((response) => {
       this.setState({ data: response.data });
     });
+    request("GET", "/getAllComments", {}).then((response) => {
+      this.setState({ comments: response.data });
+    });
+    request("GET", "/getAllUsers", {}).then((response) => {
+      this.setState({ users: response.data });
+    });
+
     setTimeout(() => {
       this.render();
-    }, 300);
+    }, 2000);
   }
 
   onSubmitPost = (event) => {
@@ -31,24 +40,42 @@ export default class AuthContent extends React.Component {
     }
   };
 
+  onSubmitComment = (event) => {
+    var splitted = event.target.id.split("_");
+    var comment = document.querySelector("#commentArea_" + splitted[1]);
+
+    console.log(this.state.users);
+  };
+
   render() {
-    this.state.data.forEach((element) => {
-      console.log(element);
-    });
+    if (this.state.data && this.state.users.length != 0) {
+      this.state.data.forEach((post) => {
+        if (!post.author) {
+          post.author =
+            this.state.users[
+              this.state.users.findIndex((user) => user.id == post.userId)
+            ].firstName +
+            " " +
+            this.state.users[
+              this.state.users.findIndex((user) => user.id == post.userId)
+            ].lastName;
+        }
+      });
+    }
 
     return (
       <div id="centerForm">
         <div id="newPostContainer">
           <TextField
             id="newPost"
-            style={{ width: "69%" }}
+            style={{ width: "68%" }}
             label="What do you want to post?"
             variant="standard"
           />
           <Button
             id="newPostBtn"
             variant="contained"
-            style={{ margin: "6px", width: "8%" }}
+            style={{ margin: "6px", width: "9%" }}
             onClick={this.onSubmitPost}
           >
             Post
@@ -64,12 +91,16 @@ export default class AuthContent extends React.Component {
               width: "60%",
             }}
           >
-            <div id="userNameDiv">userId: {post.userId}</div>
-            <div id="postContent">content: {post.content}</div>
+            <div id="userNameDiv">{post.author}</div>
+            <div id="postContent">{post.content}</div>
             <div id="commentContainer">
-              <TextareaAutosize id="commentArea" maxRows={4} />
+              <TextareaAutosize
+                id={"commentArea_" + post.id}
+                className="commentArea"
+                maxRows={4}
+              />
               <Button
-                id="newCommentBtn"
+                id={"newCommentBtn_" + post.id}
                 variant="contained"
                 style={{
                   margin: "6px",
@@ -77,7 +108,7 @@ export default class AuthContent extends React.Component {
                   marginTop: "-10px",
                   maxHeight: "40px",
                 }}
-                onClick={this.onSubmitPost}
+                onClick={this.onSubmitComment}
               >
                 Comment
               </Button>
