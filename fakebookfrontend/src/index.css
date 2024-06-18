@@ -55,6 +55,7 @@ code {
 .singleCommentPaper {
   margin: 10px;
   padding: 5px;
+  margin-left: 0;
 }
 
 .commentName {
